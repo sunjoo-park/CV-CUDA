@@ -13,6 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+set(CMAKE_PREFIX_PATH "/home/sunjoo/program/TensorRT-8.5.2.2/lib")
+set(TensorRT_INCLUDE_DIR "/home/sunjoo/program/TensorRT-8.5.2.2/include")
+
 if(TensorRT_FIND_REQUIRED)
     find_package(CUDA REQUIRED)
 else()
@@ -22,7 +25,7 @@ else()
     endif()
 endif()
 
-if (TensorRT_FOUND)
+if(TensorRT_FOUND)
     return()
 endif()
 
