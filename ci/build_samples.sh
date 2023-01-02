@@ -28,4 +28,7 @@ fi
 
 # (warning): Use "$@" (with quotes) to prevent whitespace problems.
 # shellcheck disable=SC2048
+#./ci/build.sh $build_type $build_dir "-DBUILD_SAMPLES=ON -DBUILD_TESTS=OFF -DBUILD_PYTHON=1 -DCMAKE_PREFIX_PATH=/home/sunjoo/program/TensorRT-8.5.2.2/lib -DTensorRT_INCLUDE_DIR=/home/sunjoo/program/TensorRT-8.5.2.2/include" $*
+#./ci/build.sh $build_type $build_dir "-DBUILD_SAMPLES=ON -DBUILD_TESTS=OFF -DBUILD_PYTHON=1"
+#./ci/build.sh $build_type $build_dir "-DBUILD_SAMPLES=ON -DBUILD_TESTS=OFF -DBUILD_PYTHON=1 -DCMAKE_PREFIX_PATH=${TensorRT_LIB_DIR} -DTensorRT_INCLUDE_DIR=${TensorRT_INCLUDE_DIR}"
  ./ci/build.sh $build_type $build_dir "-DBUILD_SAMPLES=ON -DBUILD_TESTS=OFF -DBUILD_PYTHON=1" $*
