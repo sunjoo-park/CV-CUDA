@@ -14,8 +14,43 @@
 
 
 # Builds a Docker image capable of running the code in the book
-FROM nvcr.io/nvidia/tensorrt:22.09-py3
+FROM ubuntu:22.04
 ARG USERNAME=nota
+ARG TARGET_DIR=/usr/local
+ARG CUDA_INSTALLER=cuda_11.7.0_515.43.04_linux.run
+ARG CUDNN_TAR_BALL=cudnn-linux-x86_64-8.6.0.163_cuda11-archive.tar.xz
+ARG TensorRT_TAR_BALL=TensorRT-8.5.2.2.Linux.x86_64-gnu.cuda-11.8.cudnn8.6.tar.gz
+WORKDIR /tmp
+RUN apt update -y && apt install -y wget curl file libxml2-dev libssl-dev zlib1g-dev libbz2-dev liblzma-dev python3-dev build-essential
+
+COPY ${CUDA_INSTALLER} .
+COPY ${CUDNN_TAR_BALL} .
+COPY ${TensorRT_TAR_BALL} .
+
+RUN mkdir -p $TARGET_DIR
+RUN chmod +x ${CUDA_INSTALLER}
+ENV CUDA_ROOT=${TARGET_DIR}/cuda_11.7
+RUN ./${CUDA_INSTALLER} --toolkit --toolkitpath=${CUDA_ROOT} --silent
+
+ENV CUDNN_ROOT=${TARGET_DIR}/cudnn-8.6.0
+RUN mkdir -p ${CUDNN_ROOT}
+RUN ls -l
+RUN apt install -y file && file ${CUDNN_TAR_BALL}} 
+RUN apt install -y tar xz-utils
+RUN rm -rfv ${CUDNN_TAR_BALL}}
+RUN tar xJf ${CUDNN_TAR_BALL} -C ${CUDNN_ROOT} --strip-components=1
+
+ENV TensorRT_ROOT=${TARGET_DIR}/TensorRT-8.5.2.2
+RUN mkdir -p ${TensorRT_ROOT}
+COPY ${TensorRT_TAR_BALL} .
+RUN tar xzf ${TensorRT_TAR_BALL} -C ${TensorRT_ROOT} --strip-components=1
+
+ENV  PATH=${CUDA_ROOT}/bin:$PATH
+ENV  LD_LIBRARY_PATH=${CUDA_ROOT}/lib64:$LD_LIBRARY_PATH
+ENV  LD_LIBRARY_PATH=${CUDNN_ROOT}/lib:$LD_LIBRARY_PATH
+ENV  C_INCLUDE_PATH=${CUDNN_ROOT}/include:$C_INCLUDE_PATH
+ENV  PATH=${TensorRT_ROOT}/bin:$PATH
+ENV  LD_LIBRARY_PATH=${TensorRT_ROOT}/lib:$LD_LIBRARY_PATH
 
 #RUN python3 -m pip install --upgrade apache-beam[gcp] cloudml-hypertune
 #RUN mkdir -p /src/practical-ml-vision-book
